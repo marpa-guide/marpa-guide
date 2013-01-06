@@ -1,0 +1,6 @@
+
+:start  ::= numbers
+numbers ::= number+               separator => <ws>
+number    ~ [\d]+
+ws        ~ [\s]+
+
