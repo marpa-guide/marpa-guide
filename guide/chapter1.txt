@@ -1,0 +1,54 @@
+Chapter 1 - Getting Started
+===========================
+
+[Index](index.html)
+
+Getting the code
+----------------
+
+Marpa is a Perl library. We will use
+[Marpa::R2](http://metacpan.org/dist/Marpa-R2) for the examples in this guide.
+
+If you have Perl already installed you can install Marpa with `cpan` or `cpanm`.
+
+    $ cpan Marpa::R2
+
+or
+
+    $ cpanm Marpa::R2
+
+This will install Marpa::R2.
+
+First example
+-------------
+
+Let's start with an example. What follows is the smallest code that could parse
+a number.
+
+!include "examples/number.pl"
+
+In this example we parse a number using the `\d` character class. The character
+classes used by Marpa are the same as those used by Perl.
+
+You can run the code by calling it with `perl`.
+
+    $ perl number.pl 9999
+    Trying to parse:
+    9999
+    ok
+
+In the next we move on by just using the special notation used by Marpa.
+
+!include "examples/number.sbnf"
+
+Marpa uses the `:start` rule to specify which rule should be matched first. The
+declaration `::=` operator separates the left side from the right side.
+
+The left side is the name of the rule. The right side specifies what it matches to.
+
+
+The next example shows how easy it to improve that grammar to parse multiple
+numbers separated by whitespace.
+
+!include "examples/numbers.sbnf"
+
