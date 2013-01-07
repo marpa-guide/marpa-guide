@@ -19,6 +19,9 @@ or
 
 This will install Marpa::R2.
 
+In the rest of this guide we'll assume you have installed Marpa::R2. The examples
+that end '.pl' do run.
+
 First example
 -------------
 
