@@ -55,6 +55,7 @@ sub process_txt_file {
 <title>$title</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.2.2/css/bootstrap-combined.min.css" rel="stylesheet">
+<link href="style.css" rel="stylesheet">
 </head>
 <body>
 <div class="container"><div class="span12">
