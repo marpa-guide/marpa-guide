@@ -3,6 +3,13 @@ Chapter 1 - Getting Started
 
 !include "guide/menu.inc"
 
+
+What is Marpa?
+--------------
+
+Marpa is a new kind of parser.
+
+
 Getting the code
 ----------------
 
