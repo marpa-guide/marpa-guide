@@ -19,6 +19,7 @@ use warnings;
 
 use File::Slurp 'read_file', 'write_file';
 use File::Spec::Functions 'catfile';
+use File::Copy;
 use Data::Dumper;
 use Text::Markdown 'markdown';
 
@@ -31,32 +32,13 @@ sub do_include {
             s/^/    /;
         }
         push @lines, "\n";
-        push @lines, "[$filename]($filename)\n";
+        push @lines, "<p class='example-filename'><a href='$filename'>$filename</a></p>";
     }
     return join '', @lines;
 }
 
-my $guide_dir = 'guide';
-
-opendir my $dirh, $guide_dir or die "Can't open '$guide_dir'";
-my @files;
-while (defined(my $file = readdir($dirh))) {
-    next if $file =~ m/^\.+$/;
-    next if $file !~ m/\.txt$/;
-    push @files, $file;
-}
-close $dirh;
-
-@files = sort @files;
-
-for my $infile (@files) {
-    my $outfile = $infile;
-    $outfile =~ s/\.txt/.html/;
-
-    $infile  = catfile('guide', $infile);
-    $outfile = catfile('out', $outfile);
-
-    print $infile . " => " . $outfile . "\n";
+sub process_txt_file {
+    my ($infile, $outfile) = @_;
 
     my $md = read_file($infile);
     my ($title) = ($md =~ m/^(.+?)$/ms);
@@ -85,5 +67,39 @@ HEADER
 FOOTER
 
     write_file($outfile, $pre . $html . $post);
+
+    return;
+}
+
+my $guide_dir = 'guide';
+
+opendir my $dirh, $guide_dir or die "Can't open '$guide_dir'";
+my @files;
+while (defined(my $file = readdir($dirh))) {
+    next if $file =~ m/^\.+$/;
+    next if $file !~ m/\.(txt|css)$/;
+    push @files, $file;
+}
+close $dirh;
+
+@files = sort @files;
+
+for my $infile (@files) {
+    my $outfile = $infile;
+
+    if ($infile =~ m/\.txt$/) {
+        $outfile =~ s/\.txt/.html/;
+    }
+
+    $infile  = catfile('guide', $infile);
+    $outfile = catfile('out', $outfile);
+    print $infile . " => " . $outfile . "\n";
+
+    if ($infile =~ m/\.txt$/) {
+        process_txt_file($infile, $outfile);
+    }
+    else {
+        copy($infile, $outfile);
+    }
 }
 
