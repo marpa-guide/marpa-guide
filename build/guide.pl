@@ -26,11 +26,13 @@ sub do_include {
     my ($filename) = @_;
     print "Including $filename\n";
     my @lines = read_file($filename);
-    for (@lines) {
-        s/^/    /;
+    if ($filename !~ m/\.inc/) {
+        for (@lines) {
+            s/^/    /;
+        }
+        push @lines, "\n";
+        push @lines, "[$filename]($filename)\n";
     }
-    push @lines, "\n";
-    push @lines, "[$filename]($filename)\n";
     return join '', @lines;
 }
 
