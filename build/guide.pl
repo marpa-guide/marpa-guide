@@ -25,7 +25,9 @@ use Text::Markdown 'markdown';
 
 sub do_include {
     my ($filename) = @_;
+
     print "Including $filename\n";
+
     my @lines = read_file($filename);
     if ($filename !~ m/\.inc/) {
         for (@lines) {
@@ -34,6 +36,7 @@ sub do_include {
         push @lines, "\n";
         push @lines, "<p class='example-filename'><a href='$filename'>$filename</a></p>";
     }
+
     return join '', @lines;
 }
 
@@ -42,6 +45,8 @@ sub process_txt_file {
 
     my $md = read_file($infile);
     my ($title) = ($md =~ m/^(.+?)$/ms);
+
+    $md =~ s/^Chapter\s(\d+)\s+-\s+/Chapter $1\n\n/ms;
 
     $md =~ s/^!include\s"([^"]+)"$/do_include($1)/gems;
 
