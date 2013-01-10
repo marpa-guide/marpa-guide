@@ -54,11 +54,26 @@ In the next we move on by just using the special notation used by Marpa.
 Marpa uses the `:start` rule to specify which rule should be matched first. The
 declaration `::=` operator separates the left side from the right side.
 
-The left side is the name of the rule. The right side specifies what it matches to.
+The symbol on the left side of declaration operater is the name of the rule.
+The symbols on the right side of the operator specify what it matches to.
 
-
-The next example shows how easy it to improve that grammar to parse multiple
+The next example shows how easy it is to improve that grammar to parse multiple
 numbers separated by whitespace.
 
 !include "examples/numbers.sbnf"
+
+As you can see it includes a new rule called `numbers`. This rule matches with
+one or more numbers. We specify this with the `+` operator after a name. We
+also specify the token that separates the numbers. In this case the `<ws>`
+token. The `number` token stays the same and we add a new lexical rule for
+whitespace.
+
+This grammar will parse input strings like this following.
+
+    123    9 45 83 1000 1001          39201
+
+The input string with numbers could be much longer than this as long as each
+number is separated by one or more whitespace characters. This includes spaces,
+tabs and newlines.
+
 
