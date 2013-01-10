@@ -16,7 +16,7 @@ Contributing
 We appreciate any contributions to this guide. See the [contribution guide][contrib] for
 more information.
 
-[contrib]: contribution.html
+[contrib]: http://peterstuifzand.nl/marpa-guide/contribution.html
 
 When you submit text to which you hold the copyright, you agree to license it under:
 
