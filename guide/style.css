@@ -23,6 +23,16 @@ p.example-filename {
     margin-bottom: 24px;
 }
 
+body {
+    padding-bottom: 48px;
+}
+
+.footer {
+    margin-top: 32px;
+    padding-top: 12px;
+    border-top: 1px solid #ccc;
+}
+
 /*
 pre.prettyprint {
     margin-bottom:0;

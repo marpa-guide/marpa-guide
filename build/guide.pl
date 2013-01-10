@@ -46,7 +46,7 @@ sub process_txt_file {
     my $md = read_file($infile);
     my ($title) = ($md =~ m/^(.+?)$/ms);
 
-    $md =~ s/^Chapter\s(\d+)\s+-\s+/Chapter $1\n\n/ms;
+    $md =~ s/^Chapter\s(\d+)\s+-\s+([^\n]+)\n/Chapter $1\n\n$2\n/ms;
 
     $md =~ s/^!include\s"([^"]+)"$/do_include($1)/gems;
 
@@ -63,12 +63,22 @@ sub process_txt_file {
 <link href="style.css" rel="stylesheet">
 </head>
 <body>
-<div class="container"><div class="span12">
+<div class="container">
+    <div class="row">
+        <div class="offset2 span8">
 HEADER
 
     my $post = <<"FOOTER";
+        </div>
+    </div>
+    <div class="row footer">
+        <div class="offset2 span8">
+            <p>
+                <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/"><img alt="Creative Commons License" style="float:left; margin-right:12px; border-width:0" src="http://i.creativecommons.org/l/by-sa/3.0/88x31.png" /></a><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">Marpa Guide</span> by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Peter Stuifzand and Contributors</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/">Creative Commons Attribution-ShareAlike 3.0 Unported License</a> and the <a rel="license" href="http://www.gnu.org/copyleft/fdl.html">GNU Free Documentation License 1.3</a></p>
+        </div>
+    </div>
+</div>
 <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.2.2/js/bootstrap.min.js"></script>
-</div></div>
 </body></html>
 FOOTER
 

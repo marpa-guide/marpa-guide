@@ -3,6 +3,7 @@ marpa-guide
 
 Guide to Marpa.
 
+
 What is Marpa
 -------------
 
@@ -13,10 +14,9 @@ http://jeffreykegler.github.com/Marpa-web-site/
 Copyright / License
 -------------------
 
-This guide is copyright (c) 2013 Peter Stuifzand.
+This guide is copyright (c) 2013 Peter Stuifzand and Contributors.
 
-It is licensed under the Creative Commons Attribution-Non-Commercial-Share
-Alike 3.0 License.
+It is licensed under the Creative Commons Attribution-Share Alike 3.0 License.
 
 The examples are copyright their respective authors and licensed under MIT/X11
 as follows:
