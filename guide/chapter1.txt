@@ -47,9 +47,9 @@ You can run the code by calling it with `perl`.
     9999
     ok
 
-In the next we move on by just using the special notation used by Marpa.
+In the next sections we'll just use the notation used by Marpa.
 
-!include "examples/number.sbnf"
+!include "examples/number2.pl"
 
 Marpa uses the `:start` rule to specify which rule should be matched first. The
 declaration operator `::=` separates the left side from the right side.
@@ -60,7 +60,7 @@ The symbols on the right side of the operator specify what it matches to.
 The next example shows how easy it is to improve that grammar to parse multiple
 numbers separated by whitespace.
 
-!include "examples/numbers.sbnf"
+!include "examples/numbers.pl"
 
 As you can see it includes a new rule called `numbers`. This rule matches with
 one or more numbers. We specify this with the `+` operator after a name.
