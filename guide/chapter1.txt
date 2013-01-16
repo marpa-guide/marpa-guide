@@ -52,7 +52,7 @@ In the next we move on by just using the special notation used by Marpa.
 !include "examples/number.sbnf"
 
 Marpa uses the `:start` rule to specify which rule should be matched first. The
-declaration `::=` operator separates the left side from the right side.
+declaration operator `::=` separates the left side from the right side.
 
 The symbol on the left side of declaration operater is the name of the rule.
 The symbols on the right side of the operator specify what it matches to.
@@ -75,5 +75,4 @@ This grammar will parse input strings like this following.
 The input string with numbers could be much longer than this as long as each
 number is separated by one or more whitespace characters. This includes spaces,
 tabs and newlines.
-
 
