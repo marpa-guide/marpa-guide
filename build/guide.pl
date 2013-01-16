@@ -42,6 +42,9 @@ sub do_include {
         push @out, "\n";
         push @out, "<p class='example-filename'><a href='$filename'>$filename</a></p>";
     }
+    else {
+        @out = @lines;
+    }
 
     return join '', @out;
 }
