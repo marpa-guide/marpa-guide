@@ -29,15 +29,21 @@ sub do_include {
     print "Including $filename\n";
 
     my @lines = read_file($filename);
+    my @out;
     if ($filename !~ m/\.inc/) {
+        my $in = 0;
         for (@lines) {
+            $in = 1,next if !$in && m/^\s*#\s*include\s+begin\s*$/;
+            $in = 0       if $in && m/^\s*#\s*include\s+end\s*$/;
+            next if !$in;
             s/^/    /;
+            push @out, $_;
         }
-        push @lines, "\n";
-        push @lines, "<p class='example-filename'><a href='$filename'>$filename</a></p>";
+        push @out, "\n";
+        push @out, "<p class='example-filename'><a href='$filename'>$filename</a></p>";
     }
 
-    return join '', @lines;
+    return join '', @out;
 }
 
 sub process_txt_file {
