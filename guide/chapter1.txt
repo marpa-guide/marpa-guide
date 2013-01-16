@@ -79,3 +79,36 @@ This grammar will parse input strings like this following.
 The input string with numbers could be much longer than this as long as each
 number is separated by one or more whitespace characters. This includes spaces,
 tabs and newlines.
+
+### Lexical rules
+
+A lexical rule specifies which characters can be matched in the input string. A
+lexical rule can contain character classes and quoted strings.
+
+A character class specifies each character or group of characters that can be
+matched. These character classes are evaluated by Perl. This means that
+everything that would work in Perl itself, can be used in a Marpa character
+class. We already saw how to match a number. This is how you could match a
+variable name.
+
+!include "examples/identifier.pl"
+
+The rule for matching an identifier (or name) is split in two rules. The first
+rule specifies the structure of the token. The first part of it matches the
+first character of an identifier. It can be an underscore, a lowercase
+character or an uppercase character. It can't be a number however.  
+The second part `id_rest` references the second rule, which specifies the
+rest of the identifier. This can include numbers as well. The asterisk `*` at the
+end says that this character class can match zero of more times.
+
+The asterisk is also the reason why we split the identifier rule into two
+parts. The asterisk can only be used on rules with a single item on the right
+hand side.
+
+A lexical rule can also use a quoted string. A quoted string are surrounded
+with single quotes `'`. The text between the quotes will match as literal text.
+You could use this for single characters or keywords.
+
+    kw_for    ~ 'for'
+    kw_if     ~ 'if'
+

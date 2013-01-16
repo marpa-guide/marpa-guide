@@ -11,8 +11,8 @@ my $g = Marpa::R2::Scanless::G->new({
 
 # include begin
 
-id_rest         ~ [_0-9a-zA-Z]*
 identifier      ~ [_a-zA-Z] id_rest
+id_rest         ~ [_0-9a-zA-Z]*
 
 # include end
 
