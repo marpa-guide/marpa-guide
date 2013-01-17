@@ -2,6 +2,9 @@
 use strict;
 use Marpa::R2;
 
+# Try and change this number to something else
+my $input = "199";
+
 my $g = Marpa::R2::Scanless::G->new({
         action_object  => 'main',
         default_action => 'do_first_arg',
@@ -18,7 +21,6 @@ END_OF_SOURCE
 });
 
 my $re = Marpa::R2::Scanless::R->new({ grammar => $g });
-my $input = $ARGV[0];
 
 print "Trying to parse:\n$input\n";
 eval { $re->read(\$input) };
