@@ -93,7 +93,7 @@ variable name.
 
 !include "examples/identifier.pl"
 
-The rule for matching an identifier (or name) is split in two rules. The first
+The rule for matching an identifier (or name) is split into two rules. The first
 rule specifies the structure of the token. The first part of it matches the
 first character of an identifier. It can be an underscore, a lowercase
 character or an uppercase character. It can't be a number however.  
