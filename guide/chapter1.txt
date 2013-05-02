@@ -54,7 +54,7 @@ In the next sections we'll just use the notation used by Marpa.
 Marpa uses the `:start` rule to specify which rule should be matched first. The
 declaration operator `::=` separates the left side from the right side.
 
-The symbol on the left side of declaration operater is the name of the rule.
+The symbol on the left side of the declaration operator is the name of the rule.
 The symbols on the right side of the operator specify what it matches to.
 
 The next example shows how easy it is to improve that grammar to parse multiple
@@ -65,7 +65,7 @@ numbers separated by whitespace.
 As you can see it includes a new rule called `numbers`. This rule matches with
 one or more numbers. We specify this with the `+` operator after a name.
 
-At the end of the `numbers` rule we specfify the token that separates the
+At the end of the `numbers` rule we specify the token that separates the
 numbers, in this case the `<ws>` token. We do this by adding the `separator`
 adverb. Abverbs can be used as options to a grammar rule. Lexical rules don't
 support adverbs.
