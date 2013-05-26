@@ -4,22 +4,38 @@ use Marpa::R2;
 use Data::Dumper;
 
 my $g = Marpa::R2::Scanless::G->new({
-        default_action => '::first',
+        default_action => '::array',
         source         => \(<<'END_OF_SOURCE'),
 
+:start        ::= rules
+rules         ::= rule+
+
 # include begin
-:start        ::= numbers
-numbers       ::= number+            action => ::array
-number          ~ [\d]+
+rule          ::= cmd_type username
+                | cmd_type list_ref
+                | user_list
+
+list_ref        ~ '@' username
+# include end
+
+user_list  ::= username '=' username username
+
+cmd_type        ~ 'Deny' | 'Allow'
+username        ~ [\w]+
+
+
 :discard        ~ ws
 ws              ~ [\s]+
-# include end
 
 END_OF_SOURCE
 });
 
 my $re = Marpa::R2::Scanless::R->new({ grammar => $g });
-my $input = "1 3 5 8 13 21 34 55";
+my $input = <<'INPUT';
+admins = admin root
+Deny baduser
+Allow @admins
+INPUT
 
 print "Trying to parse:\n$input\n\n";
 $re->read(\$input);
