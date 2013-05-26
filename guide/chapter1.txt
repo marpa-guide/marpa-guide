@@ -236,7 +236,7 @@ We add another line to `rule`. The reference is like a username.
 
 !include "examples/deny-allow2.pl"
 
-When we run it the parse succeeds, but the result is not completely right.
+When we run this code, the parse succeeds, but the result is not completely right.
 
     [
         'Allow',
@@ -244,8 +244,13 @@ When we run it the parse succeeds, but the result is not completely right.
         'admins'
     ]
 
-The `@` and `admins` is parsed in two parts. We like the reference to be a single
-thing. We change this be making a lexical rule for the `list_ref`.
+The `@` and `admins` is parsed in two parts. We like the reference to be a
+single thing. Another problem with this version is that there can be spaces
+between the '@' and the name after it. This is not what we mean. The '@' and
+the name should always be part of the same lexeme. We change this be making a
+lexical rule for the `list_ref`.
+
+**When two tokens should never be separated, make them part of the same lexical rule.**
 
 !include "examples/deny-allow3.pl"
 
@@ -277,10 +282,29 @@ Let's change `user_list` to allow multiple users.
 
 !include "examples/deny-allow5.pl"
 
+This change now allows us to specify multiple users in a user_list. The change
+that allows us to specify multiple users on an `Allow` or `Deny` line is
+featured in Exercise 1.1.
+
+If that change is completed this language allows us to easily specify users
+that allowed or denied access to a particular thing. The design of the language
+leaves out specification of that particular thing to keep the design simple and
+general.
+
 ### Exercise
 
-1. **Multiple users** &mdash; Change the grammar to allow multiple users on the `Allow` or `Deny` line. For example:
+1. **Multiple users** &mdash; Change the grammar to allow multiple users on the
+`Allow` or `Deny` line. For example:
 
         Allow root admin
         Deny baduser cracker
+
+2. **All users** &mdash; Add a rule that allows you to specify `all` or
+'everybody' as a rule that denies or allows everyone.
+
+3. **Implementation** &mdash; Implement a class `Authorization` with a method
+`CanAccess($username)` that return true if a user is allowed access and false
+if the user is denied access. The contructor of the class takes a source string
+in the language that we specified above. The rules that the parser creates
+should be checked in sequence.
 
