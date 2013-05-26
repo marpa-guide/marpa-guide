@@ -244,7 +244,7 @@ When we run it the parse succeeds, but the result is not completely right.
         'admins'
     ]
 
-The `@` and `admins` is parsed in two parts. We like the reference to a single
+The `@` and `admins` is parsed in two parts. We like the reference to be a single
 thing. We change this be making a lexical rule for the `list_ref`.
 
 !include "examples/deny-allow3.pl"
