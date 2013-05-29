@@ -29,7 +29,7 @@ or
 This will install Marpa::R2.
 
 In the rest of this guide we'll assume you have installed Marpa::R2. The examples
-that end in '.pl' can be executed.
+that end in '.pl' can be executed using `perl`.
 
 First example
 -------------
@@ -83,9 +83,11 @@ The next line specifies what a number looks like. The `~` operator separates the
 from the character class on the right. We specify `number` to be one or more digits. Marpa uses the 
 same character classes as Perl does internally.
 
-Then we specify a `:discard` rule. With this we can specify what tokens Marpa can discard. The input language contains whitespace between the numbers. With the `ws` rule we say what this looks like.
+Then we specify a `:discard` rule. With this we can specify what tokens Marpa
+can discard. The input language contains whitespace between the numbers. With
+the `ws` rule we say what this looks like.
 
-This grammar will parse input strings like this following.
+This grammar will parse input strings like the following.
 
     123    9 45 83 1000 1001          39201
 
@@ -119,7 +121,7 @@ The asterisk is also the reason why we split the identifier rule into two
 parts. The asterisk can only be used on rules with a single item on the right
 hand side.
 
-A lexical rule can also use a quoted string. A quoted string are surrounded
+A lexical rule can also use a quoted string. A quoted string is surrounded
 with single quotes `'`. The text between the quotes will match as literal text.
 You could use this for single characters or keywords.
 
@@ -154,7 +156,7 @@ language can be really easy with Marpa.
         ]
     ];
 
-The output shows that Marpa find parsed two rules. The first rule with the
+The output shows that Marpa parsed two rules. The first rule with the
 'Deny' keyword and the second with the 'Allow' keyword. It seems that the
 keywords could interfere with the usernames. The `cmd_type`s are a subset of
 the usernames.
@@ -177,9 +179,9 @@ Can Marpa see the difference between keywords and usernames?
 It doesn't matter that the first username matches a `cmd_type`. Marpa knows
 that the word 'Allow' could also be a username.
 
-Now let's see what happens when we an input that doesn't match by switching
-around the username and the keyword. Keyword could be username, but the other
-way around they can't be.
+Now let's see what happens when we use an input that doesn't match by switching
+around the username and the keyword. A keyword could be a username, but it
+can't be the other way around.
 
 I change the input to:
 
@@ -195,7 +197,7 @@ When we run the examples we get the following output:
     Marpa::R2 exception at examples/deny-allow.pl line 33.
 
 Marpa tries to point to the error as best as it can. Marpa starts with the
-problem: `No lexemes accepted at position 0`. This is Marpa's way of teling us
+problem: `No lexemes accepted at position 0`. This is Marpa's way of telling us
 that Marpa couldn't find a way to match `baduser` to one of the expected
 lexemes, `Deny` or `Allow`. 
 
@@ -212,16 +214,15 @@ and the third line contains a reference to the `admins` list of users. The `@`
 operators makes it a reference.
 
 We start by changing the input in the file. We run the code and find that it
-doesn't parse. Of course we didn't expect that. 
+doesn't parse. That's what we expected.
 
-Now we need to add a rule for parsing the `admins = ...` line.
-
-In this case `admins` is similar to a username so let's use that.
+Now we need to add a rule for parsing the `admins = ...` line. In this case
+`admins` is similar to a username so let's use that.
 
     user_list  ::= username '=' username username
 
-This line should work, let's try it. We add it in the grammar. Let's add it to the 
-`rule` rule as an alternative. We use the `|` (or) operator. Let's try it.
+This line should work. We add it in the grammar. Let's add it to the 
+`rule` rule as an alternative. We use the `|` (or) operator.
 
     rule    ::= cmd_type username
               | user_list
@@ -247,7 +248,7 @@ When we run this code, the parse succeeds, but the result is not completely righ
 The `@` and `admins` is parsed in two parts. We like the reference to be a
 single thing. Another problem with this version is that there can be spaces
 between the '@' and the name after it. This is not what we mean. The '@' and
-the name should always be part of the same lexeme. We change this be making a
+the name should always be part of the same lexeme. We change this by making a
 lexical rule for the `list_ref`.
 
 **When two tokens should never be separated, make them part of the same lexical rule.**
@@ -286,10 +287,10 @@ This change now allows us to specify multiple users in a user_list. The change
 that allows us to specify multiple users on an `Allow` or `Deny` line is
 featured in Exercise 1.1.
 
-If that change is completed this language allows us to easily specify users
-that allowed or denied access to a particular thing. The design of the language
-leaves out specification of that particular thing to keep the design simple and
-general.
+With that change this language allows us to easily specify users that are
+allowed or denied access to a particular thing. The design of the language
+leaves out the specification of that particular thing to keep the design simple
+and general.
 
 ### Exercise
 

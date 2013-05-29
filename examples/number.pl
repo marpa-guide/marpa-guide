@@ -5,11 +5,11 @@ use Marpa::R2;
 use Data::Dumper;
 
 my $g = Marpa::R2::Scanless::G->new({
-        default_action => '::first',
+        default_action => '::array',
         source         => \(<<'END_OF_SOURCE'),
 
 :start        ::= numbers
-numbers       ::= number+            action => ::array
+numbers       ::= number+
 number          ~ [\d]+
 :discard        ~ ws
 ws              ~ [\s]+
