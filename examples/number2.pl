@@ -1,28 +1,27 @@
 # Copyright (c) 2013 Peter Stuifzand
 use strict;
 use Marpa::R2;
-
-# Try and change this number to something else
-my $input = "199";
+use Data::Dumper;
 
 my $g = Marpa::R2::Scanless::G->new({
-        action_object  => 'main',
-        default_action => 'do_first_arg',
+        default_action => '::first',
         source         => \(<<'END_OF_SOURCE'),
 
 # include begin
-
-:start  ::= number
-number    ~ [\d]+
-
+:start        ::= numbers
+numbers       ::= number+            action => ::array
+number          ~ [\d]+
+:discard        ~ ws
+ws              ~ [\s]+
 # include end
 
 END_OF_SOURCE
 });
 
 my $re = Marpa::R2::Scanless::R->new({ grammar => $g });
+my $input = "1 3 5 8 13 21 34 55";
 
-print "Trying to parse:\n$input\n";
-eval { $re->read(\$input) };
-print $@ || 'ok';
-print "\n";
+print "Trying to parse:\n$input\n\n";
+$re->read(\$input);
+my $value = ${$re->value};
+print "Output:\n".Dumper($value);

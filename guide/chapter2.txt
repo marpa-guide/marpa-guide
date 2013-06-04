@@ -38,7 +38,7 @@ The complete grammar looks like the following.
 When we run the program we get the output that follows:
 
     Trying to parse:
-    100 + 200
+    100+200
     Output:
     $VAR1 = [
         '100',
