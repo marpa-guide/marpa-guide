@@ -18,8 +18,8 @@ going to ignore that option, since there's now a rather more sophisticated way t
 A stand-alone Perl module, [MarpaX::Demo::StringParser](https://metacpan.org/release/MarpaX-Demo-StringParser),
 was written to showcase the material discussed here, and to give you something to play with.
 
-Some Context
-------------
+Some context this chapter
+-------------------------
 
 There is a wonderful graphics package called [Graphviz](http://graphviz.org), from AT&T. People have written
 various wrappers for Graphviz. Mine is
@@ -74,7 +74,8 @@ Here's a bit more of the grammar, given that nodes are declared using the regexp
 	end_node    ~ ']'
 
 I'll explain below why the rule called *node_name* contains no reference to content (input stream text)
-between any occurances of the delimiters '[' and ']'. See the next section: 'A Word on Strings and Invisibility'.
+between any occurances of the delimiters '[' and ']'. See the next section
+[A Word on Strings and Invisibility](#a_word).
 
 *Pause* allows us to specify that at certain locations within the parse, i.e. at certain locations within the
 input stream, we want Marpa to stop parsing *for a while*, and pass control of the parsing process over to us.
@@ -88,7 +89,8 @@ And, during that pause, we handle all parsing, and preserve whitespace *if we wi
 
 *Event* allows us to name *pause*s, and to query Marpa as to which event triggered any particular pause.
 
-A Word on Strings and Invisibility
+<a name="a_word"></a>
+A word on strings and invisibility
 ----------------------------------
 
 Don't get confused by these 2:
@@ -118,29 +120,29 @@ Here's [an SVG version](http://savage.net.au/Ron/html/stringparser.grammar.svg) 
 by MarpaX::Demo::StringParser. The display of the *node_name* component is at the bottom-left (7 pm position) of
 the graph.
 
-An Intermediate Summary
+An intermediate summary
 -----------------------
 
 We've actually touched on a number of topics already, ofter interrelated ones, so here's a list:
 
 * Ways to handle whitespace
 
-In short, these are:
+	In short, these are:
 
-	1. Preserve all whitespace by default
+	* Preserve all whitespace by default
 
 	I.e. Design a grammar where whitespace is never discarded.
 
-	2. Preserve some whitespace
+	* Preserve some whitespace
 
 	That is, preserve whitespace by default, while overriding that sometimes, by using *pause*, to handle the
 	precise way whitespace is *conditionally* discarded.
 
-	3. Discard all whitespace by default
+	* Discard all whitespace by default
 
 	I.e. Design a grammar where whitespace is always discarded.
 
-	4. Discard some whitespace
+	* Discard some whitespace
 
 	That is, discard whitespace by default, while overriding that sometimes, by using *pause*, to handle the
 	precise way whitespace is *conditionally* preserved.
@@ -176,32 +178,33 @@ In this article, I'll always be moving it forwards, I assure you!
 
 The direct implication of all this (i.e. the grammar fragment above) is that I am saying these 4 things:
 
-	1. I tell Marpa I accept responsibility for processing a certain subset of the input stream
+* I tell Marpa I accept responsibility for processing a certain subset of the input stream
 
-	This is specified in the grammar, using *pause*.
+This is specified in the grammar, using *pause*.
 
-	2. I respond when Marpa tells me it's reached such a point
+* I respond when Marpa tells me it's reached such a point
 
-	This is part of my code, where I check for which *event* triggered the *pause*.
+This is part of my code, where I check for which *event* triggered the *pause*.
 
-	3. I finish that processing
+* I finish processing that part of the input stream
 
-	So I return control back to Marpa. And then ...
+So I return control back to Marpa. And then ...
 
-	4. I tell Marpa to treat that subset as invisible, and to resume parsing after it
+* I tell Marpa to treat that subset as invisible, and to resume parsing after it
 
-	This happens because I tell Marpa whereabouts within the input stream to resume at when I next call
-	*sub resume()*.
+This happens because I tell Marpa whereabouts within the input stream to resume at when I next call
+*sub resume()*. And I do that with the call *resume($pos)*. See line 20 of the code in the section
+[Handling the pause on the Perl side of things](#pause).
 
-	Neat, huh?
+Neat, huh?
 
-Some Sample Input
+Some sample input
 -----------------
 
 These graphs are copied from the docs for
 [MarpaX::Demo::StringParser](https://metacpan.org/release/MarpaX-Demo-StringParser).
 Since I've called them graphs, that means each line below is a complete input stream. Further, all sample lines
-below can be combined into a single file, now shipped as data/graph.04.ge within the distro.
+below can be combined into a single file, shipped as data/graph.04.ge within the distro.
 
 * Edges
 
@@ -226,7 +229,7 @@ These single-quotes are to force Markdown to display this text properly, and are
 	["[node]"]<br>
 	[     From here     ] -> [     To there     ]
 
-The Full Grammar of MarpaX::Demo::StringParser
+The full grammar of MarpaX::Demo::StringParser
 ----------------------------------------------
 
 Before discussing the Perl code for handling pauses, I want to mention a trap in grammar design.
@@ -336,6 +339,7 @@ Thus: Any call to *sub edge()* is made after all the calls to *pause*-related co
 
 And now it's time to *pause* ...
 
+<a name="pause"></a>
 Handling the pause on the Perl side of things
 ---------------------------------------------
 
@@ -553,7 +557,7 @@ Item 12: Line 48: $self -> attribute_list($attribute_list)
 These, together with the matching pair, lines 58 and 63, preserve all our work by pushing the list of attributes
 on to the stack mentioned above.
 
-A Final Summary
+A sinal summary
 ---------------
 
 The stack built is due to Marpa pausing, and then we call subs directly, rather than have Marpa call *action* subs.
@@ -566,7 +570,7 @@ which Marpa detects tokens of interest.
 
 And this order is of course the order in which those tokens appear in the input stream.
 
-Some General Notes about the Code
+Some general notes about the code
 ---------------------------------
 
 It's not obvious from the code shown, but *sub process()* is called (from *sub run()*) within a
@@ -578,7 +582,7 @@ Firstly, it's printed in a formatted manner if that's what the user asked for.
 
 Secondly, also optionally, it's written to a CSV file for further processing at the user's leisure.
 
-Wrapping Up and Winding Down
+Wrapping up and winding down
 ----------------------------
 
 I hope I've made it easier to approach the dread topic of lexing and parsing. The simple fact is that with

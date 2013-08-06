@@ -49,7 +49,7 @@ Deciding that work on the grammar is finished is equivalent to saying:
 
 * Every grammatically incorrect input stream will result in Marpa returning some sort of error result.
 
-Constructing a Mental Picture of Lexing and Parsing
+Constructing a mental picture of lexing and parsing
 ---------------------------------------------------
 
 With the advent of Marpa's SLIF, we need to feel comfortable with both Marpa's approach and the fact that, classically,
