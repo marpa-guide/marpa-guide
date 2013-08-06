@@ -582,8 +582,8 @@ Firstly, it's printed in a formatted manner if that's what the user asked for.
 
 Secondly, also optionally, it's written to a CSV file for further processing at the user's leisure.
 
-Wrapping up and winding down
-----------------------------
+Finally
+-------
 
 I hope I've made it easier to approach the dread topic of lexing and parsing. The simple fact is that with
 Marpa's new SLIF we can pass over to Marpa almost all the work, and just write code to handle precisely targeted
@@ -594,6 +594,3 @@ the past was a huge component of such work.
 
 This is combined with an almost-always clean interface, allowing our code to interact with Marpa neatly and
 efficiently.
-
-And I have not even mentioned its other features, such as the precise pin-pointing of errors, etc.
-
