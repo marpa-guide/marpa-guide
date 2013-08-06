@@ -1,0 +1,595 @@
+Chapter 5 - Advanced Usage
+==========================
+
+Conditional preservation of whitespace
+--------------------------------------
+
+We're all familiar with code which declares a single- or double-quoted string, and expects any whitespace within
+that string to be preserved, while at the same time expecting redundant whitespace in the source code to be
+discarded. This means we can format the source in different ways, and still have specific whitespace preserved because
+it's protected by those quotes. This much is simple.
+
+Well, this is precisely what I mean by *conditional* preservation of whitespace: Some is preserved and some is
+discarded. So, how do we do that using Marpa?
+
+One way would be to have Marpa preserve all whitespace, and commit ourselves to processing it somehow. Here, I'm
+going to ignore that option, since there's now a rather more sophisticated way to do it.
+
+A stand-alone Perl module, [MarpaX::Demo::StringParser](https://metacpan.org/release/MarpaX-Demo-StringParser),
+was written to showcase the material discussed here, and to give you something to play with.
+
+Some Context
+------------
+
+There is a wonderful graphics package called [Graphviz](http://graphviz.org), from AT&T. People have written
+various wrappers for Graphviz. Mine is
+[Graph::Easy::Marpa](https://metacpan.org/release/Graph-Easy-Marpa). The module mentioned above,
+MarpaX::Demo::StringParser, is a cut-down version of Graph::Easy::Marpa. both these modules implement a
+[Little Language](https://en.wikipedia.org/wiki/Little_languages) whose purpose is to make it easy for users to
+create short text files which are converted by these modules into a form suitable for inputting into programs
+(such as *dot*) which ship with Graphviz. And yes, the wrappers implemented by these modules are another example
+of [Domain-specific Languages](https://en.wikipedia.org/wiki/Domain-specific_language), just like Marpa's SLIF-DSL.
+
+The grammar in the chapter is taken from MarpaX::Demo::StringParser, and describes nodes, edges, and their
+attributes. See [the Graphviz docs](http://www.graphviz.org/content/attrs) for details of these items.
+
+A sub-grammar for whitespace
+----------------------------
+
+Firstly, here's a tiny fragment of that module's grammar, in Marpa's SLIF-DSL:
+
+	source       => \(<<'END_OF_SOURCE'),
+		...
+	:discard     ~ whitespace
+	whitespace   ~ [\s]+
+
+	END_OF_SOURCE
+
+The entire grammar is a reference to a string of rules, whose oddish delimiters are \(<<'END_OF_SOURCE') and
+END_OF_SOURCE. The '...' just means the body of the rule set has been suppressed for the moment.
+
+But, see those 2 rules which mention the reserved pseudo-symbol *:discard* and the token *whitespace*?
+This is Marpa's way of allowing us to say: Discard *all* whitespace by default. That token *whitespace* could
+have been called *ws*, or anything similar. That is, it is not a reserved word.
+
+For more on *:discard*, [see here](https://metacpan.org/module/Marpa::R2::Scanless::DSL#Discard-rules). And note,
+of course, that these 2 rules are optional. Or, you may wish to discard different characters.
+
+In other words, we're choosing to order Marpa to discard whitespace. Since this conflicts with our stated aim of
+preserving *some* whitespace, we need a mechanism which allows us to tell Marpa to override this default under
+circumstances chosen by us. Enter the *event* and *pause* adverbs.
+
+A grammar for nodes in a graph
+------------------------------
+
+Here's a bit more of the grammar, given that nodes are declared using the regexp (regular expression)
+/^\[.*\]$/:
+
+	node_name   ::= start_node end_node
+
+	:lexeme     ~ start_node   pause => before   event => start_node
+	start_node  ~ '['
+
+	:lexeme     ~ end_node
+	end_node    ~ ']'
+
+I'll explain below why the rule called *node_name* contains no reference to content (input stream text)
+between any occurances of the delimiters '[' and ']'. See the next section: 'A Word on Strings and Invisibility'.
+
+*Pause* allows us to specify that at certain locations within the parse, i.e. at certain locations within the
+input stream, we want Marpa to stop parsing *for a while*, and pass control of the parsing process over to us.
+
+It's that *for a while* part that makes the *pause* adverb appropriate. After a while, i.e. whenever we feel
+like it, we simply tell Marpa to resume parsing. This resumption does not have to take place, and will normally
+not take place, at the point the *pause* was triggered.
+
+And, during that pause, we handle all parsing, and preserve whitespace *if we wish*. Hence the word
+*conditional* used above.
+
+*Event* allows us to name *pause*s, and to query Marpa as to which event triggered any particular pause.
+
+A Word on Strings and Invisibility
+----------------------------------
+
+Don't get confused by these 2:
+
+* The syntax for a node
+
+For my application, the regexp a node must match is /^\[.*\]$/.
+
+The name of the node is within those '[' and ']' chars.
+
+The name of the node matches /.*/, meaning it can be zero-length as it happens, but you (the reader)
+should not attach any significance to the length.
+
+* The syntax for the node's grammar
+
+The grammar a node must match is 'node_name ::= start_node end_node ...', as above, where start_node is '['
+and end_node is ']'.
+
+The grammar for the node says Marpa is only allowed to see the '[' and the ']'. The node's name is hidden from Marpa
+by the design of the grammar, which forces processing to switch into the code I've written to handle processing
+between those 2 tokens.
+
+This makes the node's name invisible to Marpa, and explains why the grammar ('...start_node end_node...') says
+that - as far as Marpa is concerned - there is literally nothing between the '[' and the ']'.
+
+Here's [an SVG version](http://savage.net.au/Ron/html/stringparser.grammar.svg) of the full grammar implemented
+by MarpaX::Demo::StringParser. The display of the *node_name* component is at the bottom-left (7 pm position) of
+the graph.
+
+An Intermediate Summary
+-----------------------
+
+We've actually touched on a number of topics already, ofter interrelated ones, so here's a list:
+
+* Ways to handle whitespace
+
+In short, these are:
+
+	1. Preserve all whitespace by default
+
+	I.e. Design a grammar where whitespace is never discarded.
+
+	2. Preserve some whitespace
+
+	That is, preserve whitespace by default, while overriding that sometimes, by using *pause*, to handle the
+	precise way whitespace is *conditionally* discarded.
+
+	3. Discard all whitespace by default
+
+	I.e. Design a grammar where whitespace is always discarded.
+
+	4. Discard some whitespace
+
+	That is, discard whitespace by default, while overriding that sometimes, by using *pause*, to handle the
+	precise way whitespace is *conditionally* preserved.
+
+	This last mechanism is the topic of this article.
+
+* Pseudo-symbols such as *:discard*
+
+These allow us to specify *static* aspects of how we want Marpa to act.
+
+* Adverbs such as *event*
+
+These allow us to name *pause*s, and to query Marpa as to which event triggered any particular pause.
+
+* Adverbs such as *pause*
+
+These allow us to specify *dynamic* aspects of how our code interacts with the parsing process.
+
+Other languages implement the command (verb) *yield*, which transfers the flow of control back and forth in a
+vaguely similar fashion.
+
+* Getting Marpa to resume parsing after the callback
+
+Here we control the manner in which Marpa resumes. We do this by moving the offset within the input stream at
+which Marpa resumes.
+
+Clearly this could involve moving that pointer backwards or forwards.
+
+Since this determines the next token Marpa sees, it thus directly controls the next rule triggered. Naturally that
+could be the same rule as the last one triggered.
+
+In this article, I'll always be moving it forwards, I assure you!
+
+The direct implication of all this (i.e. the grammar fragment above) is that I am saying these 4 things:
+
+	1. I tell Marpa I accept responsibility for processing a certain subset of the input stream
+
+	This is specified in the grammar, using *pause*.
+
+	2. I respond when Marpa tells me it's reached such a point
+
+	This is part of my code, where I check for which *event* triggered the *pause*.
+
+	3. I finish that processing
+
+	So I return control back to Marpa. And then ...
+
+	4. I tell Marpa to treat that subset as invisible, and to resume parsing after it
+
+	This happens because I tell Marpa whereabouts within the input stream to resume at when I next call
+	*sub resume()*.
+
+	Neat, huh?
+
+Some Sample Input
+-----------------
+
+These graphs are copied from the docs for
+[MarpaX::Demo::StringParser](https://metacpan.org/release/MarpaX-Demo-StringParser).
+Since I've called them graphs, that means each line below is a complete input stream. Further, all sample lines
+below can be combined into a single file, now shipped as data/graph.04.ge within the distro.
+
+* Edges
+
+	'->'<br>
+	'--'
+
+These single-quotes are to force Markdown to display this text properly, and are not needed in the input stream.
+
+* Graphs
+
+	[node]<br>
+	[node] -><br>
+	-> {label: Start} -> {color: red} [node.1] {color: green} -> [node.2]<br>
+	[node.1] [node.2] [node.3]
+
+* Nodes
+
+	[]<br>
+	[node.1]<br>
+	[node 1]<br>
+	[[node\]]<br>
+	["[node]"]<br>
+	[     From here     ] -> [     To there     ]
+
+The Full Grammar of MarpaX::Demo::StringParser
+----------------------------------------------
+
+Before discussing the Perl code for handling pauses, I want to mention a trap in grammar design.
+
+    01    source                 => \(<<'END_OF_SOURCE'),
+    02
+    03    :default               ::= action => [values]
+    04
+    05    # Overall stuff.
+    06
+    07    :start                 ::= graph_grammar
+    08
+    09    graph_grammar          ::= graph_definition    action => graph
+    10
+    11    # Graph stuff.
+    12
+    13    graph_definition       ::= node_definition
+    14                               | edge_definition
+    15    # Node stuff
+    16
+    17    node_definition        ::= node_statement
+    18                               | node_statement graph_definition
+    19
+    20    node_statement         ::= node_name
+    21                               | node_name attribute_definition
+    22                               | node_statement (',') node_statement
+    23
+    24    node_name              ::= start_node end_node
+    25
+    26    :lexeme                ~ start_node        pause => before        event => start_node
+    27    start_node             ~ '['
+    28
+    29    :lexeme                ~ end_node
+    30    end_node               ~ ']'
+    31
+    32    # Edge stuff
+    33
+    34    edge_definition        ::= edge_statement
+    35                               | edge_statement graph_definition
+    36
+    37    edge_statement         ::= edge_name
+    38                               | edge_name attribute_definition
+    39                               | edge_statement (',') edge_statement
+    40
+    41    edge_name              ::= directed_edge
+    42                               | undirected_edge
+    43
+    44    :lexeme                ~ directed_edge      pause => before        event => directed_edge
+    45    directed_edge          ~ '->'
+    46
+    47    :lexeme                ~ undirected_edge    pause => before        event => undirected_edge
+    48    undirected_edge        ~ '--'
+    49
+    50    # Attribute stuff.
+    51
+    52    attribute_definition   ::= attribute_statement*
+    53
+    54    attribute_statement    ::= start_attributes end_attributes
+    55
+    56    :lexeme                ~ start_attributes   pause => before        event => start_attributes
+    57    start_attributes       ~ '{'
+    58
+    59    :lexeme                ~ end_attributes
+    60    end_attributes         ~ '}'
+    61
+    62    # Boilerplate.
+    63
+    64    :discard               ~ whitespace
+    65    whitespace             ~ [\s]+
+    66
+    67    END_OF_SOURCE
+
+You might be tempted to change the edge stuff from this:
+
+    41    edge_name              ::= directed_edge
+    42                               | undirected_edge
+    43
+    44    :lexeme                ~ directed_edge      pause => before        event => directed_edge
+    45    directed_edge          ~ '->'
+    46
+    47    :lexeme                ~ undirected_edge    pause => before        event => undirected_edge
+    48    undirected_edge        ~ '--'
+
+To this:
+
+    41    edge_name              ::= directed_edge
+    42                               | undirected_edge
+    43
+    44    directed_edge          ::= '->'   action => edge
+    45
+    46    undirected_edge        ::= '--'   action => edge
+
+It certainly looks simpler, doesn't it?
+
+Then, your Perl would not need to contain code to handle those 2 pauses, since Marpa would just trigger
+calls to the action *sub edge()*.
+
+Don't do that!
+
+What happens is that *sub edge()* is now called at a different time in the flow of processing than it is with
+the original grammar.
+
+Recall this from Chapter 1: "... by the time the first action is executed, the last event is ancient
+history."
+
+Thus: Any call to *sub edge()* is made after all the calls to *pause*-related code.
+
+And now it's time to *pause* ...
+
+Handling the pause on the Perl side of things
+---------------------------------------------
+
+Item 1: The process as whole
+
+If Marpa is going to yield processing, we need to explicitly code for this.
+
+BTW, a grammar without any *pause*s can process a string in one hit:
+
+	my($string) = 'Input stream...';
+	my($result) = $recognizer -> read(\$string);
+	...
+
+To handle *pause*s however, we switch to a loop, since we must call *sub resume()* after each pause, until Marpa
+hits the end of the input stream.
+
+So, here is the *sub process()* method of MarpaX::Demo::StringParser:
+
+    01    sub process
+    02    {
+    03        my($self)   = @_;
+    04        my($string) = $self -> graph_text;
+    05        my($length) = length $string;
+    06
+    07        # We use read()/lexeme_read()/resume() because we pause at each lexeme.
+    08
+    09        my($attribute_list);
+    10        my($do_lexeme_read);
+    11        my(@event, $event_name);
+    12        my($lexeme_name, $lexeme);
+    13        my($node_name);
+    14        my($span, $start);
+    15
+    16        for
+    17        (
+    18            my $pos = $self -> recce -> read(\$string);
+    19            $pos < $length;
+    20            $pos = $self -> recce -> resume($pos)
+    21        )
+    22        {
+    23            print "read() => pos: $pos\n" if ($self -> verbose > 1);
+    24
+    25            $do_lexeme_read = 1;
+    26            @event          = @{$self -> recce -> events};
+    27            $event_name     = ${$event[0]}[0];
+    28            ($start, $span) = $self -> recce -> pause_span;
+    29            $lexeme_name    = $self -> recce -> pause_lexeme;
+    30            $lexeme         = $self -> recce -> literal($start, $span);
+    31
+    32            print "pause_span($lexeme_name) => start: $start. span: $span. " .
+    33                "lexeme: $lexeme. event: $event_name\n" if ($self -> verbose > 1);
+    34
+    35            if ($event_name eq 'start_attributes')
+    36            {
+    37                # Read the attribute_start lexeme, but don't do lexeme_read()
+    38                # at the bottom of the for loop, because we're just about
+    39                # to fiddle $pos to skip the attributes.
+    40
+    41                $pos            = $self -> recce -> lexeme_read($lexeme_name);
+    42                $pos            = $self -> find_terminator(\$string, qr/}/, $start);
+    43                $attribute_list = substr($string, $start + 1, $pos - $start - 1);
+    44                $do_lexeme_read = 0;
+    45
+    46                print "index() => attribute list: $attribute_list\n" if ($self -> verbose > 1);
+    47
+    48                $self -> attribute_list($attribute_list);
+    49            }
+    50            elsif ($event_name eq 'start_node')
+    51            {
+    52                # Read the node_start lexeme, but don't do lexeme_read()
+    53                # at the bottom of the for loop, because we're just about
+    54                # to fiddle $pos to skip the node's name.
+    55
+    56                $pos            = $self -> recce -> lexeme_read($lexeme_name);
+    57                $pos            = $self -> find_terminator(\$string, qr/]/, $start);
+    58                $node_name      = substr($string, $start + 1, $pos - $start - 1);
+    59                $do_lexeme_read = 0;
+    60
+    61                print "index() => node name: $node_name\n" if ($self -> verbose > 1);
+    62
+    63                $self -> node($node_name);
+    64            }
+    65            elsif ($event_name eq 'directed_edge')
+    66            {
+    67                $self -> edge($lexeme);
+    68            }
+    69            elsif ($event_name eq 'undirected_edge')
+    70            {
+    71                $self -> edge($lexeme);
+    72            }
+    73            else
+    74            {
+    75                die "Unexpected lexeme '$lexeme_name' with a pause\n";
+    76            }
+    77
+    78            $pos = $self -> recce -> lexeme_read($lexeme_name) if ($do_lexeme_read);
+    79
+    80            print "lexeme_read($lexeme_name) => $pos\n" if ($self -> verbose > 1);
+    81        }
+    82
+    83        # Return a defined value for success and undef for failure.
+    84
+    85        return $self -> recce -> value;
+    86
+    87    } # End of process.
+
+Item 2: Lines 16 .. 21 - The Loop
+
+Lines 16 .. 21 are saying that since we put at least one *pause* in the grammar, we must expect Marpa to exit from
+*sub read()* before the end of the input stream, and that we must immediately:
+
+* Handle the pause
+
+That's lines 25 .. 76.
+
+* Handle the fact that Marpa paused *before* the lexeme declaring the *pause*
+
+That's lines 41, 56 and 78, which tell Marpa to move past the lexeme with *sub lexeme_read()*
+(discarding it in the process). Then, at the top of the loop, we call *sub resume()*.
+
+So, we just have to explain lines 25 .. 76.
+
+And 78 actually, since the call to *sub lexeme_read()* is dependent on something via the *$do_lexeme_read* variable.
+
+Item 3: Lines 25 .. 76 - The Context and The Code
+
+Here we stockpile values for use below:
+
+Line 25: $do_lexeme_read = 1
+
+We set a flag so that by default we read and hence skip the lexeme where Marpa paused. See line 78.
+
+We reset this flag in some cases, as explained next. See lines 44 and 59.
+
+The structure of this particular grammar has a feature you might not be using: Each *pause* is at the start of a
+*pair* of delimiters. That is, the expected input includes '[ ... ]' and '{ ... }'.
+
+So, the code now has to do 2 things:
+
+* Step 1: Skip the lexeme Marpa paused at, i.e. the opening delimiter
+
+And that's the first token of each pair, '[' or '{'. This is easy, since Marpa tells us where it paused.
+
+See the calls to *sub lexeme_read()* at lines 41 and 56.
+
+But, and it's a huge but, in these 2 cases we can't use the *sub lexeme_read()* at line 78, because we need its
+return value, *$pos*, at lines 43, 58 and, later, 20.
+
+Hence we call *sub lexeme_read()* at lines 41 and 56, *and* we use *$do_lexeme_read* to disable the call at
+line 78.
+
+* Step 2: Skip the lexeme which is the closing delimiter of each pair
+
+That's just the closing ']' or '}'. But this just happens automatically when we return to the top of the loop.
+
+Well, not quite automatically. The calls to *sub find_terminator()*, at lines 42 and 57, do what the method name
+says, and also return *$pos*, which we use in lines 43 and 58 (discussed below), and which we pass back to
+Marpa at line 20 when we call *sub resume()*.
+
+This ties in with the grammar, lines 29 .. 30 and 59 .. 60, where we do *not* specify any pause for the closing
+delimiters, so Marpa just continues right on past them.
+
+Item 4: Line 26: @event = @{$self -> recce -> events}
+
+... and ...
+
+Item 5: Line 27: $event_name = ${$event[0]}[0]
+
+We ask Marpa which *event* triggered the *pause*.
+
+That allows us to handle each case in the multi-branched 'if' starting at line 35.
+
+Since the 'if's do simple string comparisons, there is no gain from using a smart-match module such as
+[match::simple](https://metacpan.org/module/match::simple).
+
+Item 6: Line 28: ($start, $span) = $self -> recce -> pause_span()
+
+This tells us the offset within the input stream at which Marpa paused. So, we use this as the starting point
+for our scan of the input, looking for the closing delimiter matching the opening one found by Marpa.
+
+See lines 42 and 57.
+
+Item 7: Line 29: $lexeme_name = $self -> recce -> pause_lexeme()
+
+This tells us the name of lexeme at which Marpa paused. We use it to tell Marpa to step over it before resuming.
+
+See lines 41, 56, and, for the other cases, 78.
+
+Item 8: Line 30: $lexeme = $self -> recce -> literal($start, $span)
+
+This is the string we need in those cases where we don't need to search between delimiters for our text.
+
+We just pass this to the *sub edge()*, to be pushed on to a stack of interesting things.
+
+See lines 67 and 71, and the matching grammar at lines 44 .. 48.
+
+Item 9: Line 42: $pos = $self -> find_terminator(\$string, qr/}/, $start);
+
+... and ...
+
+Item 10: Line 57: $pos = $self -> find_terminator(\$string, qr/]/, $start);
+
+These set *$pos*, i.e. the offset within the input stream, to the closing delimiter matching the opening one
+found by Marpa (as stated just above).
+
+We do this because back at the top of the loop, *$pos* is passed to *sub resume()*, telling Marpa where exactly
+we want it to resume parsing.
+
+Item 11: Line 43: $attribute_list = substr($string, $start + 1, $pos - $start - 1)
+
+... and ...
+
+Item 12: Line 48: $self -> attribute_list($attribute_list)
+
+These, together with the matching pair, lines 58 and 63, preserve all our work by pushing the list of attributes
+on to the stack mentioned above.
+
+A Final Summary
+---------------
+
+The stack built is due to Marpa pausing, and then we call subs directly, rather than have Marpa call *action* subs.
+
+All this must take place in a choreographed manner, so that the calls to those subs are in the correct
+chronological order.
+
+This order (at least for my app, and I'm sure for any typical app) must correspond exactly to the order in
+which Marpa detects tokens of interest.
+
+And this order is of course the order in which those tokens appear in the input stream.
+
+Some General Notes about the Code
+---------------------------------
+
+It's not obvious from the code shown, but *sub process()* is called (from *sub run()*) within a
+try ... catch structure, handled by the fine module [Try::Tiny](https://metacpan.org/module/Try::Tiny).
+
+When *sub process()* exits successfully, the stack is analyzed in various ways.
+
+Firstly, it's printed in a formatted manner if that's what the user asked for.
+
+Secondly, also optionally, it's written to a CSV file for further processing at the user's leisure.
+
+Wrapping Up and Winding Down
+----------------------------
+
+I hope I've made it easier to approach the dread topic of lexing and parsing. The simple fact is that with
+Marpa's new SLIF we can pass over to Marpa almost all the work, and just write code to handle precisely targeted
+places of interest within the input stream.
+
+Overall, this should make clear the astonishing power of Marpa to relieve the programmer of what in
+the past was a huge component of such work.
+
+This is combined with an almost-always clean interface, allowing our code to interact with Marpa neatly and
+efficiently.
+
+And I have not even mentioned its other features, such as the precise pin-pointing of errors, etc.
+

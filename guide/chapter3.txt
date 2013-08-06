@@ -1,0 +1,72 @@
+Chapter 3 - Parsing an Expression
+=================================
+
+!include "guide/menu.inc"
+
+Parsers shine in situations where there are many discrete parts in sequence
+with a certain structure. A grammar describes the rules of this structure.
+
+The discrete parts of the structure are the lexemes (or tokens) that make up
+the sequences. The lexemes are groups of one or more characters. These are the
+atoms of the language.
+
+Any group of characters will do. And the nice thing is that for a grammar it
+doesn't matter what these characters look like. The rules of the grammar only
+describe how these lexeme relate to each other.
+
+Let's start with a little example of an input string.
+
+    100+200
+
+The lexemes of this input string depends of the language. Let's say we want to
+create a grammar that understands the structure of a number followed by an
+operator "+", followed by another number.
+
+    language ::= number op_plus number
+
+In Marpa this means `language` is defined as `number` followed by `op_plus`
+followed by `number`. Marpa doesn't know what each of the names means. To remedy that we will
+write the definitions of the lexemes.
+
+    number  ~ [\d]+
+    op_plus ~ '+'
+
+The complete grammar looks like the following.
+
+!include "examples/number2-1.pl"
+
+When we run the program we get the output that follows:
+
+    Trying to parse:
+    100+200
+    Output:
+    $VAR1 = [
+        '100',
+        '+',
+        '200'
+    ];
+
+## Whitespace
+
+Now try and add some whitespace between certain tokens. A space after the first
+number. Marpa will complain that it can't lex a certain character:
+
+    Lexing failed at unacceptable character 0x0020 (non-graphic character)
+
+We would like to be able to parse expression with whitespace between them.
+There are two ways to do that. One way is to add a whitespace lexeme in every
+place where whitespace could occur. Let start with an example.
+
+!include "examples/number2-2.pl"
+
+We fix the whitespace problem by adding an optional whitespace token at every
+place where it could occur. This makes for one big mess, especially if you have
+many rules, each with specific whitespace requirements.
+
+The other way to parse rules with whitespace in between lexemes is with the
+`:discard` pseudo rule. This rule allow you to specify which parts of the input
+stream Marpa should discard when it encounters these.
+
+!include "examples/number2-3.pl"
+
+
