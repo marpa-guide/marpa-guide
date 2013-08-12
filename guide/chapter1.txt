@@ -120,8 +120,8 @@ For more on this, see Wikipeida's article on
 And these structures combined with the input stream, become the basis for the recognition and evaluation phases.
 
 Briefly, the parsing process converted a grammar as a tree, plus input, into another structure, representable as a
-tree, which is evaluated (analyzed) as per instructions embedded in the grammar. A example of such an instruction is
-given above as 'action => graph', whose exact effect will be discussed later.
+tree, which is evaluated (analyzed) as per instructions embedded in the grammar. An example of such an instruction is
+given above as 'action => graph', which exact effect will be discussed later.
 
 But why not use regular expressions?
 ------------------------------------
@@ -145,7 +145,7 @@ Where does the grammar come from?
 
 The easiest approach is to copy a suitable grammar, but if that's not possible, we must write it, bit by bit.
 
-And this leads to developing a set of test files, whose purpose is to test the grammar also bit by bit.
+And this leads to developing a set of test files, which purpose is to test the grammar also bit by bit.
 This includes tests that are deliberately faulty. That is, some tests must cause Marpa to report a syntax error
 in the input stream. Whether or not the grammar or the input stream is the real culprit is of course dependent
 on the user's expertise.
