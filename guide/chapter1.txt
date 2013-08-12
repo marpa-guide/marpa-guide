@@ -114,7 +114,7 @@ So, Marpa creates various data structures from such a grammar during the phase c
 A simplistic view of this is that a grammar expressed as a multi-line string is converted into the same grammar
 expressed as a tree.
 
-For more on this, see Wikipeida's article on
+For more on this, see Wikipedia's article on
 [Abstract Syntax Trees](https://en.wikipedia.org/wiki/Abstract_syntax_tree).
 
 And these structures combined with the input stream, become the basis for the recognition and evaluation phases.
@@ -126,7 +126,7 @@ given above as 'action => graph', which exact effect will be discussed later.
 But why not use regular expressions?
 ------------------------------------
 
-Regular expressions are a brilliant invention, and a perfectly suited for many applications.
+Regular expressions are a brilliant invention, and perfectly suited for many applications.
 
 But the requirement to process structured grammars, and solutions such as Marpa, are what distinguises parsing
 from lexing and regular expressions.
@@ -134,7 +134,7 @@ from lexing and regular expressions.
 Lexers and regular expressions recognize strings, but do not assign any structure to them.
 
 When captures are added to regular expressions, you begin to see bits and pieces of a structure, but regular
-expressions and captures have a hard time with a structure of any complexity, and when the structure is recursive,
+expressions and captures have a hard time with a structure of any complexity, or when the structure is recursive,
 they break down completely.
 
 You can see such a case above, in the last rule, where 'node_statement' is defined to be a series of 'node_statement's
@@ -143,7 +143,7 @@ separated by commas.
 Where does the grammar come from?
 ---------------------------------
 
-The easiest approach is to copy a suitable grammar, but if that's not possible, we must write it, bit by bit.
+The easiest approach is to copy a suitable grammar. If that's not possible, we must write it, bit by bit.
 
 And this leads to developing a set of test files, which purpose is to test the grammar also bit by bit.
 This includes tests that are deliberately faulty. That is, some tests must cause Marpa to report a syntax error
