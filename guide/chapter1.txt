@@ -80,10 +80,53 @@ And all this takes place in a single pass of the input stream, i.e. very efficie
 Consequently, Marpa's new design completely eliminates the necessity for you to write code to perform
 your own lexing.
 
+Constructing a visual picture of lexing and parsing
+---------------------------------------------------
+
+The previous section is more of a terse, descriptive explanation of Marpa's internal processes. It's reasonable to ask:
+Is there another way to view this?
+
+Well, take the first of the 3 points above: (Marpa) Precomputes a grammar. What does that mean?
+
+Consider this fragment of a grammar:
+
+	:start 					::= graph_grammar
+
+	graph_grammar			::= graph_definition	action => graph
+
+	graph definition		::= node_definition
+								| edge_definition
+
+	node_definition			::= node_statement
+								| node_statement <graph definition>
+
+	node_statement			::= node_name
+								| node_name attribute_definition
+								| node_statement (',') node_statement
+
+	...
+
+This set of rules can be represented graphically as a tree, rooted at the start rule.
+See [this SVG version](http://savage.net.au/Ron/html/stringparser.svg), as produced by an unfinished Perl module
+(MarpaX::Grammar::GraphViz2) which graphs grammars.
+
+So, Marpa creates various data structures from such a grammar during the phase called 'Precomputes a grammar'.
+A simplistic view of this is that a grammar expressed as a multi-line string is converted into the same grammar
+expressed as a tree.
+
+For more on this, see Wikipeida's article on
+[Abstract Syntax Trees](https://en.wikipedia.org/wiki/Abstract_syntax_tree).
+
+And these structures combined with the input stream, become the basis for the recognition and evaluation phases.
+
+Briefly, the parsing process converted a grammar as a tree, plus input, into another structure, representable as a
+tree, which is evaluated (analyzed) as per instructions embedded in the grammar. A example of such an instruction is
+given above as 'action => graph', whose exact effect will be discussed later.
+
 Where does the grammar come from?
 ---------------------------------
 
-The simplest is to copy a suitable grammar, but that's not possible, we must write it, bit by bit.
+The easiest approach is to copy a suitable grammar, but if that's not possible, we must write it, bit by bit.
 
 And this leads to developing a set of test files, whose purpose is to test the grammar also bit by bit.
 This includes tests that are deliberately faulty. That is, some tests must cause Marpa to report a syntax error
