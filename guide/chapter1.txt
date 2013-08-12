@@ -108,7 +108,7 @@ Consider this fragment of a grammar:
 
 This set of rules can be represented graphically as a tree, rooted at the start rule.
 See [this SVG version](http://savage.net.au/Ron/html/stringparser.svg), as produced by an unfinished Perl module
-(MarpaX::Grammar::GraphViz2) which graphs grammars.
+(MarpaX::Grammar::GraphViz2) which graphs grammars. This grammar comes from the module MarpaX::Demo::StringParser.
 
 So, Marpa creates various data structures from such a grammar during the phase called 'Precomputes a grammar'.
 A simplistic view of this is that a grammar expressed as a multi-line string is converted into the same grammar
@@ -122,6 +122,23 @@ And these structures combined with the input stream, become the basis for the re
 Briefly, the parsing process converted a grammar as a tree, plus input, into another structure, representable as a
 tree, which is evaluated (analyzed) as per instructions embedded in the grammar. A example of such an instruction is
 given above as 'action => graph', whose exact effect will be discussed later.
+
+But why not use regular expressions?
+------------------------------------
+
+Regular expressions are a brilliant invention, and a perfectly suited for many applications.
+
+But the requirement to process structured grammars, and solutions such as Marpa, are what distinguises parsing
+from lexing and regular expressions.
+
+Lexers and regular expressions recognize strings, but do not assign any structure to them.
+
+When captures are added to regular expressions, you begin to see bits and pieces of a structure, but regular
+expressions and captures have a hard time with a structure of any complexity, and when the structure is recursive,
+they break down completely.
+
+You can see such a case above, in the last rule, where 'node_statement' is defined to be a series of 'node_statement's
+separated by commas.
 
 Where does the grammar come from?
 ---------------------------------
