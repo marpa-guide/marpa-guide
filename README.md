@@ -1,7 +1,7 @@
 marpa-guide
 ===========
 
-Guide to Marpa.
+Guide to Marpa. Visit the web version at [marpa-guide.github.io](http://marpa-guide.github.io)
 
 What is Marpa
 -------------
