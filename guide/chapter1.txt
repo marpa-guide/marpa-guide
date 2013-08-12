@@ -3,17 +3,107 @@ Chapter 1 - Getting Started
 
 !include "guide/menu.inc"
 
-
 What is Marpa?
 --------------
 
-Marpa is parser library written in Perl and C. It gives you a way to convert
-text to a structure based on any BNF. During the parsing Marpa knows what
-tokens it expects next and allows you to guide the parse in the right
-direction.
+Marpa is library written in C, with a Perl wrapper. It is dedicated to [parsing](https://en.wikipedia.org/wiki/Parsing).
+That is, people who wish to write parsers incorporate Marpa into their programs.
 
-Getting the code
-----------------
+You start using Marpa by providing it with 2 inputs, a grammar and an input stream which may or may not conform to
+the given grammar.
+
+This means Marpa parses the grammar and stores it in RAM in some convenient form.
+Such a grammar specifies both what tokens are acceptable, and the order (syntax) in which they may appear.
+
+Next, Marpa parses your input stream and tests each token it finds there against the grammar you provided.
+This includes determining if the token appears at an acceptable position within the grammr, and hence at an
+acceptable position within the input stream.
+
+It is in fact doing exactly the same as you are doing reading this text.
+For us humans, the grammar (e.g. English) is pre-loaded in our minds, and the input stream is any text we are
+reading or hearing (for instance, text, music or noise).
+
+We test the latter against the grammar, and declare that it either matches what we expect, or fails to match.
+
+Upon failure, we could switch the internal grammar we're using, from say English to Spanish or Chinese.
+If that fails we may well give up. That is, we conclude the input stream is grammatically incorrect,
+i.e. it contains one of more syntax errors, or, at the worst, it is visual (textual) or audible noise.
+
+But if it matches, we conclude the input stream was grammatically correct, or roughly so, since humans don't
+always speak in grammatically perfect speech of course. Indeed, in songs and advertisments, proper grammar is
+often noticably distorted or even absent.
+
+Likewise, Marpa attempts to verify whether or not the input stream does in fact match the grammar.
+
+This is described as: The input was 'recognized' (or not) by Marpa. Hence the (Perl) variable $recce in the docs.
+
+We can go further and say that recognizing the input can be be described as: The input stream conforms to the
+given grammar.
+
+If it doesn't, and we're dealing with a fixed text which we want to match, then we modify the grammar step-by-step,
+until it Just Works. This tells us that the point of the test data is to test the grammar.
+
+Deciding that work on the grammar is finished is equivalent to saying:
+
+* Every grammatically correct input stream will result in Marpa returning some sort of valid result, and
+
+* Every grammatically incorrect input stream will result in Marpa returning some sort of error result.
+
+Constructing a mental picture of lexing and parsing
+---------------------------------------------------
+
+With the advent of Marpa's SLIF, we need to feel comfortable with both Marpa's approach and the fact that, classically,
+lexing and parsing were often such visibly distinct phases, perhaps even requiring 2 programs.
+
+Marpa's SLIF follows the classical separation of lexing and parsing, but it introduces a notation which is
+friendly to those programmers more accustomed to regular expressions and recursive descent.
+
+So instead of two completely separate modules, lexer and parser, each with its own interface, you have a single
+DSL source  file, and the lexing and parsing statements look similar, with only the  different operators
+("::=" versus "~") to tell them apart.
+
+Underneath however, in the implementation, the distinction is still there, as sharp as ever.
+
+Marpa has 3 phases: Grammar pre-processing; Recognition; and Evaluation. That is, Marpa:
+
+* Precomputes a grammar.
+
+* Recognizes an input, creating a table.
+
+* Turns that table into a tree, and evaluates it.
+
+Events occur during recognition. Actions are executed during the evaluation.
+In other words, by the time the first action is executed, the last event is ancient history.
+
+And all this takes place in a single pass of the input stream, i.e. very efficiently indeed.
+
+Consequently, Marpa's new design completely eliminates the necessity for you to write code to perform
+your own lexing.
+
+Where does the grammar come from?
+---------------------------------
+
+The simplest is to copy a suitable grammar, but that's not possible, we must write it, bit by bit.
+
+And this leads to developing a set of test files, whose purpose is to test the grammar also bit by bit.
+This includes tests that are deliberately faulty. That is, some tests must cause Marpa to report a syntax error
+in the input stream. Whether or not the grammar or the input stream is the real culprit is of course dependent
+on the user's expertise.
+
+Marpa's grammars are written in what we call a SLIF-DSL. Here, SLIF stands for Scanless Interface, and DSL is
+[Domain-specific Language](https://en.wikipedia.org/wiki/Domain-specific_language).
+
+Many programmers will have head of [BNF](https://en.wikipedia.org/wiki/Backus%E2%80%93Naur_Form). Well, Marpa's
+SLIF-DSL is an extended BNF. That is, it includes special tokens which only make sense within the context of a Marpa
+grammar. Hence the 'Domain Specific' part of the name.
+
+In practice, this means you express your grammar in a string, and Marpa treats that as a set of rules as to how
+you want Marpa to treat your input stream.
+
+Marpa's docs for this [are here](https://metacpan.org/module/Marpa::R2::Scanless::DSL).
+
+Getting the code for Marpa
+--------------------------
 
 Marpa is a Perl library. We will use
 [Marpa::R2](http://metacpan.org/dist/Marpa-R2) for the examples in this guide.
@@ -30,4 +120,3 @@ This will install Marpa::R2.
 
 In the rest of this guide we'll assume you have installed Marpa::R2. The examples
 that end in '.pl' can be executed using `perl`.
-
