@@ -166,7 +166,7 @@ Getting the code for Marpa
 --------------------------
 
 Marpa is a Perl library. We will use
-[Marpa::R2](http://metacpan.org/dist/Marpa-R2) for the examples in this guide.
+[Marpa::R2](http://metacpan.org/release/Marpa-R2) for the examples in this guide.
 
 If you have Perl already installed you can install Marpa with `cpan` or `cpanm`.
 
