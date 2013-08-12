@@ -1,4 +1,4 @@
-Chapter 2 - Parse an expression
+Chapter 2 - Parse an Expression
 ===============================
 
 !include "guide/menu.inc"
