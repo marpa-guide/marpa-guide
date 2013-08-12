@@ -153,7 +153,7 @@ on the user's expertise.
 Marpa's grammars are written in what we call a SLIF-DSL. Here, SLIF stands for Scanless Interface, and DSL is
 [Domain-specific Language](https://en.wikipedia.org/wiki/Domain-specific_language).
 
-Many programmers will have head of [BNF](https://en.wikipedia.org/wiki/Backus%E2%80%93Naur_Form). Well, Marpa's
+Many programmers will have heard of [BNF](https://en.wikipedia.org/wiki/Backus%E2%80%93Naur_Form). Well, Marpa's
 SLIF-DSL is an extended BNF. That is, it includes special tokens which only make sense within the context of a Marpa
 grammar. Hence the 'Domain Specific' part of the name.
 
