@@ -224,7 +224,7 @@ Some of Marpa's features
 
 Sample Code
 -----------
-A number of Perl modules use Marpa, and can be freely downloaded for inspection:
+A number of Perl modules use Marpa, and can be freely downloaded for inspection. In alphabetical order:
 
 * Graph::Easy::Marpa.
 
@@ -235,6 +235,12 @@ A number of Perl modules use Marpa, and can be freely downloaded for inspection:
 * MarpaX::Grammar::GraphViz2.
 
 * MarpaX::Languages::C::AST.
+
+* MarpaX::Repa.
+
+* MarpaX::xPathLike.
+
+Search [MetaCPAN](https://metacpan.org) for more.
 
 Getting the code for Marpa
 --------------------------
