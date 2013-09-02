@@ -208,23 +208,32 @@ Marpa's docs for this SLIF-DSL [are here](https://metacpan.org/module/Marpa::R2:
 Some of Marpa's features
 ------------------------
 
-* Written in C for speed.
+* Is written in C for speed.
+
+* Can precisely identify the location (within the input stream) of syntax errors.
+
+* Has extensive documentation. [Start here](https://metacpan.org/release/Marpa-R2) if you wish to delve into the docs.
 
 * Extends the BNF concept in various ways.
 
-* Exceptionally straight-forward interface via Perl.
+* Has an exceptionally straight-forward interface via Perl.
 
 * Has a low-level ('thin') interface as well.
+
+* Has convenient tracing and reporting features.
 
 * Ships as a stand-alone library module, for inclusion into end-user code.
 
 * Ships with a broad test suite.
 
-* Intriguingly, Marpa's own grammar (for its DSL) ships in a file which has therefor the same format as end-user grammars.
+* Intriguingly, Marpa's own grammar (for its DSL) ships in a file (metag.bnf) which has the same format as end-user
+grammars.
+
+* Has a [Google Group](https://groups.google.com/forum/#!forum/marpa-parser) and email list (marpa-parser@googlegroups.com).
 
 Sample Code
 -----------
-A number of Perl modules use Marpa, and can be freely downloaded for inspection. In alphabetical order:
+A number of Perl modules use Marpa::R2, and can be freely downloaded for inspection. In alphabetical order:
 
 * Graph::Easy::Marpa.
 
@@ -234,6 +243,8 @@ A number of Perl modules use Marpa, and can be freely downloaded for inspection.
 
 * MarpaX::Grammar::GraphViz2.
 
+* MarpaX::Grammar::Parser.
+
 * MarpaX::Languages::C::AST.
 
 * MarpaX::Repa.
@@ -241,6 +252,8 @@ A number of Perl modules use Marpa, and can be freely downloaded for inspection.
 * MarpaX::xPathLike.
 
 Search [MetaCPAN](https://metacpan.org) for more.
+
+Note: Ignore any modules using the obsolete (NAIF) interface. That interface was accessed via Marpa::XS.
 
 Getting the code for Marpa
 --------------------------
