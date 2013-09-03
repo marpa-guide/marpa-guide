@@ -273,3 +273,19 @@ This will install Marpa::R2.
 
 In the rest of this guide we'll assume you have installed Marpa::R2. The examples
 that end in '.pl' can be executed using `perl`.
+
+References
+----------
+* [BNF](https://en.wikipedia.org/wiki/Backus%E2%80%93Naur_Form)
+
+* [Parsing](https://en.wikipedia.org/wiki/Parsing)
+
+* [Abstract Syntax Trees](https://en.wikipedia.org/wiki/Abstract_syntax_tree)
+
+* [LL and LR Parsing](http://blog.reverberate.org/2013/07/ll-and-lr-parsing-demystified.html)
+
+* [Domain-specific Language](https://en.wikipedia.org/wiki/Domain-specific_language)
+
+* [Marpa::R2](https://metacpan.org/release/Marpa-R2)
+
+* [Marpa's Google Group](https://groups.google.com/forum/#!forum/marpa-parser)
