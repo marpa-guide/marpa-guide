@@ -94,7 +94,7 @@ Consider this fragment of a grammar:
 
 	graph_grammar			::= graph_definition	action => graph
 
-	graph definition		::= node_definition
+	graph_definition		::= node_definition
 								| edge_definition
 
 	node_definition			::= node_statement

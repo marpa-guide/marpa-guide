@@ -84,7 +84,7 @@ first character of an identifier. It can be an underscore, a lowercase
 character or an uppercase character. It can't be a number however.
 The second part `id_rest` references the second rule, which specifies the
 rest of the identifier. This can include numbers as well. The asterisk `*` at the
-end says that this character class can match zero of more times.
+end says that this character class can match zero or more times.
 
 The asterisk is also the reason why we split the identifier rule into two
 parts. The asterisk can only be used on rules with a single item on the right
