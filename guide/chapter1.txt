@@ -6,7 +6,7 @@ Chapter 1 - Getting Started
 What is Marpa?
 --------------
 
-Marpa is library written in C, with a Perl wrapper. It is dedicated to [parsing](https://en.wikipedia.org/wiki/Parsing).
+Marpa is a slibrary written in C, with a Perl wrapper. It is dedicated to [parsing](https://en.wikipedia.org/wiki/Parsing).
 That is, people who wish to write parsers incorporate Marpa into their programs.
 
 You start using Marpa by providing it with 2 inputs, a grammar and an input stream which may or may not conform to
@@ -52,14 +52,14 @@ Deciding that work on the grammar is finished is equivalent to saying:
 Constructing a mental picture of lexing and parsing
 ---------------------------------------------------
 
-With the advent of Marpa's SLIF, we need to feel comfortable with both Marpa's approach and the fact that, classically,
+With the advent of Marpa's Scanless Interface, or SLIF, we need to feel comfortable with both Marpa's approach and the fact that, classically,
 lexing and parsing were often such visibly distinct phases, perhaps even requiring 2 programs.
 
 Marpa's SLIF follows the classical separation of lexing and parsing, but it introduces a notation which is
 friendly to those programmers more accustomed to regular expressions and recursive descent.
 
 So instead of two completely separate modules, lexer and parser, each with its own interface, you have a single
-DSL source  file, and the lexing and parsing statements look similar, with only the  different operators
+source  file for your domain-specific language (DSL), and the lexing and parsing statements look similar, with only the  different operators
 ("::=" versus "~") to tell them apart.
 
 Underneath however, in the implementation, the distinction is still there, as sharp as ever.
@@ -121,7 +121,7 @@ And these structures combined with the input stream, become the basis for the re
 
 Briefly, the parsing process converted a grammar as a tree, plus input, into another structure, representable as a
 tree, which is evaluated (analyzed) as per instructions embedded in the grammar. An example of such an instruction is
-given above as 'action => graph', which exact effect will be discussed later.
+given above as ```action => graph```, which exact effect will be discussed later.
 
 But why not use regular expressions?
 ------------------------------------
@@ -139,6 +139,14 @@ they break down completely.
 
 You can see such a case above, in the last rule, where 'node_statement' is defined to be a series of 'node_statement's
 separated by commas.
+
+Theoretical computer science tells us that grammars like Marpa model a "context-free"
+class of languages (CFGs), and cover the next level of expressivity beyond regular languages
+(which is what "regular expressions" got their name after). While context-free languages are still limited enough
+to guarantee efficient parsing algorithms, they are expressive enough to parse e.g. all programming languages and a
+rather large subset of natural languages. As a hallmark example of a context-free structure, think of balancing
+opening and closing parantheses. While a CFG grammar, which can be understood by Marpa, can directly model ```a-(b*(c/d))``` ,
+that is not possible when using a single regular expression.
 
 Where does the grammar come from?
 ---------------------------------
