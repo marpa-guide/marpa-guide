@@ -6,7 +6,7 @@ Chapter 1 - Getting Started
 What is Marpa?
 --------------
 
-Marpa is a slibrary written in C, with a Perl wrapper. It is dedicated to [parsing](https://en.wikipedia.org/wiki/Parsing).
+Marpa is a library written in C, with a Perl wrapper. It is dedicated to [parsing](https://en.wikipedia.org/wiki/Parsing).
 That is, people who wish to write parsers incorporate Marpa into their programs.
 
 You start using Marpa by providing it with 2 inputs, a grammar and an input stream which may or may not conform to
