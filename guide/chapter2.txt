@@ -100,7 +100,6 @@ You could use this for single characters or keywords.
 Next steps
 ----------
 
-[Chapter 3: A small language]
-
+[Chapter 3: A small language](chapter3.html)
 
 
