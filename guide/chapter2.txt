@@ -97,9 +97,10 @@ You could use this for single characters or keywords.
     kw_for    ~ 'for'
     kw_if     ~ 'if'
 
+In the next chapter we look some more at how to use lexical rules in a bigger picture.
+
 Next steps
 ----------
 
 [Chapter 3: A small language](chapter3.html)
-
 
