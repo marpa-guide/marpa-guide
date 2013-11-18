@@ -188,3 +188,10 @@ This will install Marpa::R2.
 
 In the rest of this guide we'll assume you have installed Marpa::R2. The examples
 that end in '.pl' can be executed using `perl`.
+
+Next step
+---------
+
+[Chapter 2: Parsing numbers](chapter2.html)
+
+
