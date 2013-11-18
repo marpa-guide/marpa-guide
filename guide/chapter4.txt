@@ -1,4 +1,4 @@
-Chapter 3 - Parsing an Expression
+Chapter 4 - Parsing an Expression
 =================================
 
 !include "guide/menu.inc"
