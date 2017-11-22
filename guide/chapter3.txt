@@ -1,6 +1,8 @@
 Chapter 3 - A small language for declarations
 =============================================
 
+!include "guide/menu.inc"
+
 In this chapter we'll look a small language thats helps a declare which people
 or groups of people are allowed to use something.
 
@@ -184,3 +186,8 @@ and general.
 if the user is denied access. The contructor of the class takes a source string
 in the language that we specified above. The rules that the parser creates
 should be checked in sequence.
+
+Next step
+---------
+
+[Chapter 4: Parsing an expression](chapter4.html)
