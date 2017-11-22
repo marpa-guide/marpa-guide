@@ -98,7 +98,7 @@ FOOTER
 }
 
 my $guide_dir = 'guide';
-my $out_dir = 'docs';
+my $out_dir = '../marpa-guide.github.com';
 
 mkdir $out_dir if !-e $out_dir;
 
