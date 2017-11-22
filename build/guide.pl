@@ -98,6 +98,9 @@ FOOTER
 }
 
 my $guide_dir = 'guide';
+my $out_dir = 'docs';
+
+mkdir $out_dir if !-e $out_dir;
 
 opendir my $dirh, $guide_dir or die "Can't open '$guide_dir'";
 my @files;
@@ -117,8 +120,8 @@ for my $infile (@files) {
         $outfile =~ s/\.txt/.html/;
     }
 
-    $infile  = catfile('guide', $infile);
-    $outfile = catfile('out', $outfile);
+    $infile  = catfile($guide_dir, $infile);
+    $outfile = catfile($out_dir, $outfile);
     print $infile . " => " . $outfile . "\n";
 
     if ($infile =~ m/\.txt$/) {
