@@ -1,0 +1,40 @@
+/*
+    This guide is copyright (c) 2013 Peter Stuifzand.
+
+    It is licensed under the Creative Commons Attribution-Non-Commercial-Share
+    Alike 3.0 License.
+*/
+
+
+h1 {
+    font-size: 50pt;
+    margin-top: 48px;
+    margin-bottom: 24px;
+}
+
+h2 {
+    font-size: 24px;
+    margin-top: 32px;
+}
+
+p.example-filename {
+    font-size: 10pt;
+    margin-top: 0;
+    margin-bottom: 24px;
+}
+
+body {
+    padding-bottom: 48px;
+}
+
+.footer {
+    margin-top: 32px;
+    padding-top: 12px;
+    border-top: 1px solid #ccc;
+}
+
+/*
+pre.prettyprint {
+    margin-bottom:0;
+}
+*/
